@@ -527,9 +527,17 @@ components:
       properties:
         id:
           type: string
-        codeValue:
+        dimension:
           type: string
-        displayValue:
+        unCode:
+          type: string
+        description:
+          type: string
+        descriptionGerman:
+          type: string
+        unSymbol:
+          type: string
+        cxSymbol:
           type: string
 
     MaterialDemandSeriesResponse:
