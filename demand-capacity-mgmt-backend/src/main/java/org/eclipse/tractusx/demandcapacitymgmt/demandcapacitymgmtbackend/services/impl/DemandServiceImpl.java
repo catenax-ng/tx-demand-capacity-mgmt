@@ -22,27 +22,10 @@
 
 package org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.services.impl;
 
-import eclipse.tractusx.demand_capacity_mgmt_specification.model.CompanyDto;
-import eclipse.tractusx.demand_capacity_mgmt_specification.model.DemandCategoryResponse;
-import eclipse.tractusx.demand_capacity_mgmt_specification.model.MaterialDemandRequest;
-import eclipse.tractusx.demand_capacity_mgmt_specification.model.MaterialDemandResponse;
-import eclipse.tractusx.demand_capacity_mgmt_specification.model.MaterialDemandSeries;
-import eclipse.tractusx.demand_capacity_mgmt_specification.model.MaterialDemandSeriesResponse;
-import eclipse.tractusx.demand_capacity_mgmt_specification.model.MaterialDemandSeriesValue;
-import eclipse.tractusx.demand_capacity_mgmt_specification.model.UnitMeasure;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import eclipse.tractusx.demand_capacity_mgmt_specification.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.CompanyEntity;
-import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.DemandCategoryEntity;
-import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.DemandSeries;
-import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.DemandSeriesValues;
-import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.MaterialDemandEntity;
-import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.UnitMeasureEntity;
+import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.*;
 import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.enums.MaterialDemandStatus;
 import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.exceptions.BadRequestException;
 import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.exceptions.NotFoundException;
@@ -54,6 +37,12 @@ import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.service
 import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.utils.DataConverterUtil;
 import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.utils.UUIDUtil;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -331,9 +320,13 @@ public class DemandServiceImpl implements DemandService {
     private UnitMeasure enrichUnitMeasure(UnitMeasureEntity unitMeasureEntity) {
         UnitMeasure unitMeasure = new UnitMeasure();
 
-        unitMeasure.setId(unitMeasureEntity.getId().toString());
-        unitMeasure.setCodeValue(unitMeasureEntity.getCodeValue());
-        unitMeasure.setDisplayValue(unitMeasureEntity.getDisplayValue());
+        unitMeasure.setId(String.valueOf(unitMeasureEntity.getId()));
+        unitMeasure.setDimension(unitMeasureEntity.getDimension());
+        unitMeasure.setUnCode(unitMeasureEntity.getUnCode());
+        unitMeasure.setDescription(unitMeasureEntity.getDescription());
+        unitMeasure.setDescriptionGerman(unitMeasureEntity.getDescriptionGerman());
+        unitMeasure.setUnSymbol(unitMeasureEntity.getUnSymbol());
+        unitMeasure.setCxSymbol(unitMeasureEntity.getCxSymbol());
 
         return unitMeasure;
     }
