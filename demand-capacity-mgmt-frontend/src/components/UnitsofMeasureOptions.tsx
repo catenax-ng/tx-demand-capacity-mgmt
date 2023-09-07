@@ -32,19 +32,22 @@ const UnitsOfMeasureOptions: React.FC<UnitsOfMeasureOptionsProps> = ({ selectedU
   const { unitsofmeasure } = UnitsOfMeasureContextData || {};
 
   // Use the demandcategories array to fill the <select> options
-  return (
-    <>
-      <option disabled={true} value="">
-        --Choose an option--
-      </option>
-      {unitsofmeasure &&
-        unitsofmeasure.map((unit) => (
-          <option key={unit.id} value={unit.id} selected={unit.id === selectedUnitMeasureId}>
-            {unit.displayValue}
-          </option>
-        ))}
-    </>
-  );
+    return (
+        <>
+            {unitsofmeasure &&
+                unitsofmeasure.map((unit) => (
+                    <option key={unit.id} value={unit.id} selected={unit.id === selectedUnitMeasureId}>
+                        {unit.dimension && `${unit.dimension} | `}
+                        {unit.unCode && `${unit.unCode} | `}
+                        {unit.description && `${unit.description} | `}
+                        {unit.descriptionGerman && `${unit.descriptionGerman} | `}
+                        {unit.unSymbol && `${unit.unSymbol} | `}
+                        {unit.cxSymbol && unit.cxSymbol}
+                    </option>
+                ))}
+        </>
+    );
+
 };
 
 export default UnitsOfMeasureOptions;
