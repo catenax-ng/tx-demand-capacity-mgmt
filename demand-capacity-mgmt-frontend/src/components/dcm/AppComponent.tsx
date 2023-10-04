@@ -29,6 +29,7 @@ import CapacityGroupDetailsPage from "../pages/CapacityGroupDetailsPage";
 import AuthenticatedRoute from "../../util/AuthenticatedRoute";
 import AuthenticationComponent from "../auth/AuthenticationComponent";
 import { UserProvider } from '../../contexts/UserContext';
+import EventsPage from "../pages/EventsPage";
 
 
 const AppComponent: React.FC = () => {
@@ -48,6 +49,11 @@ const AppComponent: React.FC = () => {
                 <Route path="/details" element={
                     <AuthenticatedRoute>
                         <CapacityGroupDetailsPage />
+                    </AuthenticatedRoute>
+                } />
+                <Route path="/events" element={
+                    <AuthenticatedRoute>
+                        <EventsPage />
                     </AuthenticatedRoute>
                 } />
 
