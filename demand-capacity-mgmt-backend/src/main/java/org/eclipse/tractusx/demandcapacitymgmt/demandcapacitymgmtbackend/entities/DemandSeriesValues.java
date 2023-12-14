@@ -23,12 +23,11 @@
 package org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.eclipse.tractusx.demandcapacitymgmt.demandcapacitymgmtbackend.entities.enums.WeekColor;
+
 import java.time.LocalDate;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "demand_series_values")
@@ -44,6 +43,8 @@ public class DemandSeriesValues {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private DemandSeries demandSeries;
 
     @Column(name = "calendar_week", nullable = false)
@@ -51,4 +52,11 @@ public class DemandSeriesValues {
 
     @Column(name = "demand", nullable = false)
     private Double demand;
+
+    @Column(name = "ruled", nullable = false)
+    private boolean ruled = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "week_color")
+    private WeekColor weekColor;
 }

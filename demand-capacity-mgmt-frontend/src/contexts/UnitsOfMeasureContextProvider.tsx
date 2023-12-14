@@ -20,9 +20,9 @@
  *    ********************************************************************************
  */
 
-import React, { createContext, useState, useEffect } from 'react';
-import api from "../util/Api";
-
+import React, { createContext, useEffect, useState } from 'react';
+import createAPIInstance from "../util/Api";
+import { useUser } from "./UserContext";
 
 export interface UnitMeasure {
   id: string
@@ -41,10 +41,11 @@ interface UnitsOfMeasureContextData {
 export const UnitsofMeasureContext = createContext<UnitsOfMeasureContextData | undefined>(undefined);
 
 const UnitsofMeasureContextContextProvider: React.FC<React.PropsWithChildren<{}>> = (props) => {
-
+  const { access_token } = useUser();
   const [unitsofmeasure, setUnitsofMeasure] = useState<UnitMeasure[]>([]);
 
   useEffect(() => {
+    const api = createAPIInstance(access_token);
     const fetchUnitsofMeasure = async () => {
       try {
         const response = await api.get('/unitmeasure');
@@ -54,15 +55,15 @@ const UnitsofMeasureContextContextProvider: React.FC<React.PropsWithChildren<{}>
         console.error('Error fetching units of measure:', error);
       }
     };
-  
+
     fetchUnitsofMeasure();
-  }, []);
-  
-  
+  }, [access_token]);
+
+
 
 
   return (
-    <UnitsofMeasureContext.Provider value={{ unitsofmeasure}}>
+    <UnitsofMeasureContext.Provider value={{ unitsofmeasure }}>
       {props.children}
     </UnitsofMeasureContext.Provider>
   );

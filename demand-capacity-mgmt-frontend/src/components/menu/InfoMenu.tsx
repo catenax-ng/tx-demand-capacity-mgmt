@@ -22,45 +22,58 @@
 
 import Nav from "react-bootstrap/Nav";
 import { FaArrowDown, FaArrowUp, FaHome, FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { useInfoMenu } from "../../contexts/InfoMenuContextProvider";
+
 
 function InfoMenu() {
     const { data } = useInfoMenu();
+
+    const navigate = useNavigate();
+    const handleNavigation = (path: string) => {
+        navigate(path);
+    }
+
+    const formatData = (data: number | null | undefined): number | string => {
+        return data !== null && data !== undefined ? data : '0';
+    };
     return (
         <>
             <Nav className="me-auto">
-                <Nav.Link href="/"><FaHome/> Home</Nav.Link>
-                <Nav.Link href="../#favorites"><FaStar /> Favorites <span className="badge rounded-pill text-bg-primary" id="favorites-count">-</span></Nav.Link>
-                {/* TODO: Add functionality for Favorites link */}
-                <Nav.Link href="../#alerts">Alerts
-                    <span className="badge rounded-pill text-bg-danger" id="alerts-count">
-                        {data?.general.count || '-'}
+                <Nav.Link href="/"><FaHome /> Home</Nav.Link>
+                <Nav.Link onClick={() => handleNavigation('/favorites')}><FaStar /> Favorites <span className="ms-1 badge rounded-pill text-bg-primary"
+                    id="favorites-count">-</span></Nav.Link>
+
+                <Nav.Link href="../alerts">Alerts
+                    <span className="ms-1 badge rounded-pill text-bg-danger" id="alerts-count">
+                        {formatData(data?.general)}
                     </span>
                 </Nav.Link>
-                {/* TODO: Add functionality for Alerts link */}
+
                 <Nav.Link href="../up">
                     <FaArrowUp /> Status
-                    <span className="badge rounded-pill text-bg-success" id="status-plus-count">
-                        {data?.statusImprovement.count || '-'}
+                    <span className="ms-1 badge rounded-pill text-bg-success" id="status-plus-count">
+                        {formatData(data?.statusImprovement)}
                     </span>
                 </Nav.Link>
                 <Nav.Link href="../down">
                     <FaArrowDown /> Status
-                    <span className="badge rounded-pill text-bg-danger" id="status-minus-count">
-                        {data?.statusDegredation.count || '-'}
+                    <span className="ms-1 badge rounded-pill text-bg-danger" id="status-minus-count">
+                        {formatData(data?.statusDegredation)}
                     </span>
                 </Nav.Link>
                 <Nav.Link href="../todo">
                     Todo
-                    <span className="badge rounded-pill text-bg-warning" id="todo-count">
-                        {data?.todos.count || '-'}
+                    <span className="ms-1 badge rounded-pill text-bg-warning" id="todo-count">
+                        {formatData(data?.todos)}
                     </span>
                 </Nav.Link>
-                <Nav.Link href="../#events">Events <span className="badge rounded-pill text-bg-info" id="events-count">-</span></Nav.Link>
-                {/* TODO: Add functionality for events link */}
+                <Nav.Link onClick={() => handleNavigation('/events')}>
+                    Events
+                    <span className="ms-1 badge rounded-pill text-bg-info" id="events-count">-</span>
+                </Nav.Link>
             </Nav>
         </>
-
     );
 }
 

@@ -37,4 +37,6 @@ public interface CompanyService {
     CompanyDto convertEntityToDto(CompanyEntity companyEntity);
 
     List<CompanyDto> getAllCompany();
+
+    List<CompanyDto> getTopCompanies();
 }

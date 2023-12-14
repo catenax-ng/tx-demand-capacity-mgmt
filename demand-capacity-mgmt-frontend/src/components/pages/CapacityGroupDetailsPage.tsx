@@ -19,16 +19,20 @@
  *    SPDX-License-Identifier: Apache-2.0
  *    ********************************************************************************
  */
-import React, { useState, useContext, useEffect, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { Tab, Tabs } from 'react-bootstrap';
+import { useNavigate, useParams } from 'react-router-dom';
 import CapacityGroupChronogram from '../../components/capacitygroup/CapacityGroupChronogram';
-import CapacityGroupSumView from '../capacitygroup/CapacityGroupSumView';
-import { useParams } from 'react-router-dom';
 import { CapacityGroupContext } from '../../contexts/CapacityGroupsContextProvider';
+import DemandContextProvider, { DemandContext } from '../../contexts/DemandContextProvider';
+import { EventsContext } from '../../contexts/EventsContextProvider';
 import { SingleCapacityGroup } from '../../interfaces/capacitygroup_interfaces';
-import DemandContextProvider from '../../contexts/DemandContextProvider';
+import { DemandProp } from "../../interfaces/demand_interfaces";
+import { EventProp } from '../../interfaces/event_interfaces';
 import CapacityGroupDemandsList from '../capacitygroup/CapacityGroupDemandsList';
+import CapacityGroupSumView from '../capacitygroup/CapacityGroupSumView';
 import { LoadingMessage } from '../common/LoadingMessages';
+import EventsTable from '../events/EventsTable';
 
 function CapacityGroupDetailsPage() {
   const { id } = useParams();
@@ -41,19 +45,52 @@ function CapacityGroupDetailsPage() {
   const { getCapacityGroupById } = context;
   const [activeTab, setActiveTab] = useState('overview');
   const [capacityGroup, setCapacityGroup] = useState<SingleCapacityGroup | null | undefined>(null);
+  const [materialDemands, setMaterialDemands] = useState<DemandProp[] | null>([]);
+  const { fetchFilteredEvents } = useContext(EventsContext)!;
+  const { getDemandbyId } = useContext(DemandContext)!;
+  const [capacityGroupEvents, setcapacityGroupEvents] = useState<EventProp[]>([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (id) {
       (async () => {
         try {
           const fetchedCapacityGroup = await getCapacityGroupById(id);
+          if (!fetchedCapacityGroup) {
+
+            navigate('/invalid');
+            return;
+          }
           setCapacityGroup(fetchedCapacityGroup || null);
+
+          // Fetching material demands for the capacity group
+          if (fetchedCapacityGroup.linkMaterialDemandIds && fetchedCapacityGroup.linkMaterialDemandIds.length > 0) {
+            const demandPromises = fetchedCapacityGroup.linkMaterialDemandIds.map(demandId => getDemandbyId(demandId));
+            const demands = await Promise.all(demandPromises);
+
+            // Filter out any potential undefined values before setting the state.
+            const validDemands = demands.filter(Boolean) as DemandProp[];
+
+            setMaterialDemands(validDemands);
+          }
+
+          const filters = {
+            capacity_group_id: id,
+            start_time: '',
+            end_time: '',
+            event: '',
+            material_demand_id: '',
+          };
+          setcapacityGroupEvents(await fetchFilteredEvents(filters));
         } catch (error) {
           console.error('Failed to fetch capacity group:', error);
+          navigate('/error');
         }
       })();
     }
-  }, [id, getCapacityGroupById]);
+  }, [id, getCapacityGroupById, fetchFilteredEvents, navigate, getDemandbyId]);
+
+
 
   const memoizedComponent = useMemo(() => {
     if (!capacityGroup) {
@@ -67,10 +104,9 @@ function CapacityGroupDetailsPage() {
           <div className="row">
             <div className="col"></div>
             <div className="col-6 border d-flex align-items-center justify-content-center" style={{ padding: '10px' }}>
-              {capacityGroup?.capacityGroupId} - {capacityGroup?.capacitygroupname}
+              {capacityGroup?.capacityGroupId} - {capacityGroup?.capacityGroupName}
             </div>
             <div className="col d-flex justify-content-end">
-              <br />
             </div>
           </div>
           <Tabs
@@ -85,8 +121,8 @@ function CapacityGroupDetailsPage() {
             }}
           >
             <Tab eventKey="overview" title="Overview">
-              <CapacityGroupSumView capacityGroup={capacityGroup} />
-              <CapacityGroupChronogram capacityGroup={capacityGroup} />
+              <CapacityGroupSumView capacityGroup={capacityGroup} materialDemands={materialDemands} />
+              <CapacityGroupChronogram capacityGroup={capacityGroup} materialDemands={materialDemands} />
             </Tab>
             <Tab eventKey="materials" title="Materials">
               <DemandContextProvider>
@@ -94,13 +130,14 @@ function CapacityGroupDetailsPage() {
               </DemandContextProvider>
             </Tab>
             <Tab eventKey="events" title="Events">
-              Pre filtered event list here
+              <EventsTable events={capacityGroupEvents} isArchive={false} />
             </Tab>
+
           </Tabs>
         </div>
       </>
     );
-  }, [capacityGroup, activeTab]); // Add any other dependencies if necessary
+  }, [capacityGroup, capacityGroupEvents, materialDemands, activeTab]);
 
   return memoizedComponent;
 }

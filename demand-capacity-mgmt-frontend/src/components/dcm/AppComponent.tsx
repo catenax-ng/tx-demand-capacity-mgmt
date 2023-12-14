@@ -21,40 +21,154 @@
  */
 
 import React from 'react';
-import {Route, Routes} from "react-router-dom";
-import TopMenu from "../common/TopMenu";
-import {InfoMenuProvider} from '../../contexts/InfoMenuContextProvider';
-import Home from "../pages/CapacityGroupPage";
-import CapacityGroupDetailsPage from "../pages/CapacityGroupDetailsPage";
+import { Route, Routes } from "react-router-dom";
+import CapacityGroupsProvider from '../../contexts/CapacityGroupsContextProvider';
+import DemandContextProvider from '../../contexts/DemandContextProvider';
+import EventsContextProvider from '../../contexts/EventsContextProvider';
+import FavoritesContextProvider from "../../contexts/FavoritesContextProvider";
 import AuthenticatedRoute from "../../util/AuthenticatedRoute";
-import AuthenticationComponent from "../auth/AuthenticationComponent";
-import { UserProvider } from '../../contexts/UserContext';
+import QuickAcessItems from '../common/QuickAcessItems';
+import AdminPage from '../pages/AdminPage';
+import AlertsPage from '../pages/AlertsPage';
+import AuthenticationComponent from '../pages/AuthenticationPage';
+import CapacityGroupDetailsPage from "../pages/CapacityGroupDetailsPage";
+import Home from "../pages/CapacityGroupPage";
+import DownStatusPage from '../pages/DownStatusPage';
+import ErrorPage from '../pages/ErrorPage';
+import EventsPage from "../pages/EventsPage";
+import FavoritesPage from "../pages/FavoritesPage";
+import TodoListPage from '../pages/TodoListPage';
+import UpStatusPage from '../pages/UpStatusPage';
+import Layout from './Layout';
 
 
 const AppComponent: React.FC = () => {
     return (
-        <UserProvider>
-        <div>
-            <Routes>
-                <Route path="/" element={
-                    <AuthenticatedRoute>
-                        <InfoMenuProvider>
-                            <TopMenu />
-                        </InfoMenuProvider>
-                        <Home />
-                    </AuthenticatedRoute>
-                } />
+        <Routes>
+            <Route path="/login" element={<AuthenticationComponent />} />
+            <Route path="*" element={<ErrorPage />} />
 
-                <Route path="/details" element={
-                    <AuthenticatedRoute>
-                        <CapacityGroupDetailsPage />
-                    </AuthenticatedRoute>
-                } />
+            <Route path="/" element={
 
-                <Route path="/login" element={<AuthenticationComponent />} />
-            </Routes>
-        </div>
-        </UserProvider>
+                <AuthenticatedRoute>
+                    <FavoritesContextProvider>
+                        <DemandContextProvider>
+                            <Layout>
+                                <Home />
+                                <QuickAcessItems />
+                            </Layout></DemandContextProvider>
+                    </FavoritesContextProvider>
+                </AuthenticatedRoute>
+
+            } />
+
+            <Route path="/details/:id" element={
+                <AuthenticatedRoute>
+                    <FavoritesContextProvider>
+                        <DemandContextProvider>
+                            <Layout>
+                                <CapacityGroupsProvider>
+                                    <EventsContextProvider>
+                                        <CapacityGroupDetailsPage />
+                                    </EventsContextProvider>
+                                </CapacityGroupsProvider>
+                            </Layout></DemandContextProvider>
+                    </FavoritesContextProvider>
+                </AuthenticatedRoute>
+            } />
+            <Route path="/alerts" element={
+                <AuthenticatedRoute>
+                    <FavoritesContextProvider>
+                        <DemandContextProvider>
+                            <Layout>
+                                <EventsContextProvider>
+                                    <AlertsPage />
+                                </EventsContextProvider>
+                            </Layout>
+                        </DemandContextProvider>
+                    </FavoritesContextProvider>
+                </AuthenticatedRoute>
+            } />
+            <Route path="/up" element={
+                <AuthenticatedRoute>
+                    <FavoritesContextProvider>
+                        <DemandContextProvider>
+                            <Layout>
+                                <EventsContextProvider>
+                                    <UpStatusPage />
+                                </EventsContextProvider>
+                            </Layout>
+                        </DemandContextProvider>
+                    </FavoritesContextProvider>
+                </AuthenticatedRoute>
+            } />
+            <Route path="/down" element={
+                <AuthenticatedRoute>
+                    <FavoritesContextProvider>
+                        <DemandContextProvider>
+                            <Layout>
+                                <EventsContextProvider>
+                                    <DownStatusPage />
+                                </EventsContextProvider>
+                            </Layout>
+                        </DemandContextProvider>
+                    </FavoritesContextProvider>
+                </AuthenticatedRoute>
+            } />
+            <Route path="/todo" element={
+                <AuthenticatedRoute>
+                    <FavoritesContextProvider>
+                        <DemandContextProvider>
+                            <Layout>
+                                <EventsContextProvider>
+                                    <TodoListPage />
+                                </EventsContextProvider>
+                            </Layout>
+                        </DemandContextProvider>
+                    </FavoritesContextProvider>
+                </AuthenticatedRoute>
+            } />
+
+            <Route path="/events" element={
+                <AuthenticatedRoute>
+                    <FavoritesContextProvider>
+                        <DemandContextProvider>
+                            <Layout>
+                                <EventsContextProvider>
+                                    <EventsPage />
+                                </EventsContextProvider>
+                            </Layout>
+                        </DemandContextProvider>
+                    </FavoritesContextProvider>
+                </AuthenticatedRoute>
+            } />
+
+            <Route path="/favorites" element={
+                <AuthenticatedRoute>
+                    <DemandContextProvider>
+                        <FavoritesContextProvider>
+                            <Layout>
+
+                                <FavoritesPage />
+
+                            </Layout>
+                        </FavoritesContextProvider>
+                    </DemandContextProvider>
+                </AuthenticatedRoute>
+            } />
+
+            <Route path="/admin" element={
+                <AuthenticatedRoute>
+                    <FavoritesContextProvider>
+                        <DemandContextProvider>
+                            <Layout>
+                                <AdminPage />
+                            </Layout>
+                        </DemandContextProvider>
+                    </FavoritesContextProvider>
+                </AuthenticatedRoute>
+            } />
+        </Routes>
     );
 }
 

@@ -65,15 +65,13 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyEntity getCompanyById(UUID id) {
         Optional<CompanyEntity> company = companyRepository.findById(id);
-
         if (company.isEmpty()) {
             throw new NotFoundException(
                 404,
                 "Company not found in DB",
                 new ArrayList<>(List.of("ID provided - : " + id))
             );
-        }
-
+        } else company.get().setCount(company.get().getCount() + 1);
         return company.get();
     }
 
@@ -102,5 +100,15 @@ public class CompanyServiceImpl implements CompanyService {
         List<CompanyEntity> companyEntityList = companyRepository.findAll();
 
         return companyEntityList.stream().map(this::convertEntityToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CompanyDto> getTopCompanies() {
+        List<CompanyEntity> companyEntityList = companyRepository.findTop5ByOrderByCountDesc();
+        return companyEntityList
+            .stream()
+            .filter(c -> c.getCount() >= 0)
+            .map(this::convertEntityToDto)
+            .collect(Collectors.toList());
     }
 }

@@ -86,9 +86,75 @@ paths:
         - Keycloak
       summary: Logout (Token)
       operationId: logoutToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+                - refresh_token
       responses:
         200:
           description: Successfully logged out
+
+  /token/introspect:
+    post:
+      tags:
+        - Keycloak
+      summary: Introspect token
+      operationId: introspectToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required:
+                - refresh_token
+      responses:
+        200:
+          description: Token introspection result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntrospectTokenResponse'
+
+  /user:
+    put:
+      tags:
+        - userOperations
+      summary: edit a user
+      operationId: update an user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      responses:
+        201:
+          description: General Greeting
+    get:
+      tags:
+        - userOperations
+      summary: get all users
+      operationId: fetch all users
+      responses:
+        200:
+          description: General Greeting
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
 
   /loggingHistory:
     post:
@@ -109,7 +175,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoggingHistoryResponse'
-
     delete:
       tags:
         - loggingHistory
@@ -135,6 +200,73 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/LoggingHistoryResponse'
+  /addressBook:
+    get:
+      tags:
+        - addressBook
+      summary: get all companies
+      operationId: getAllAddressBooks
+      responses:
+        200:
+          description: General greeting
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AddressBookResponse'
+    post:
+      tags:
+        - addressBook
+      summary: post a record
+      operationId: postAddressBook
+      responses:
+        200:
+          description: General greeting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressBookResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressBookRequest'
+    delete:
+      tags:
+        - addressBook
+      summary: delete a record
+      operationId: deleteAddressBook
+      responses:
+        201:
+          description: General greeting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressBookRequest'
+
+  /addressBook/query:
+    get:
+      tags:
+        - addressBook
+      summary: get companies
+      operationId: getAddressBook
+      responses:
+        200:
+          description: General greeting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressBookResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressBookRequest'
 
 
   /loggingHistory/filterLogs:
@@ -295,28 +427,6 @@ paths:
                   $ref: '#/components/schemas/LoggingHistoryResponse'
         404:
           description: loggingHistory not found
-
-
-  /token/introspect:
-    post:
-      tags:
-        - Keycloak
-      summary: Introspect token
-      operationId: introspectToken
-      parameters:
-        - in: cookie
-          name: auth_token
-          schema:
-            type: string
-          required: true
-          description: Authentication token
-      responses:
-        200:
-          description: Token introspection result
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IntrospectTokenResponse'
   /statuses:
     post:
       tags:
@@ -412,7 +522,44 @@ paths:
                 items:
                   $ref: '#/components/schemas/MaterialDemandResponse'
 
+  /demand/series/{material_demand_id}:
+    get:
+      tags:
+        - Demand
+      summary: get list of demand series by material demand id
+      operationId: getDemandSeriesByMaterialDemand
+      parameters:
+        - in: 'path'
+          name: 'material_demand_id'
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: General greeting
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MaterialDemandSeriesResponse'
+
   /demand/series:
+    get:
+      tags:
+        - Demand
+      summary: get list of demand series
+      operationId: getDemandSeries
+      responses:
+        200:
+          description: General greeting
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MaterialDemandSeriesResponse'
+
     post:
       tags:
         - Demand
@@ -432,6 +579,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DemandSeriesCompositeResponse'
+
   /demand/series/unlink:
     post:
       tags:
@@ -575,7 +723,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CapacityGroupResponse'
+                $ref: '#/components/schemas/SingleCapacityGroup'
 
 
   /weekbasedcapacitygroup:
@@ -719,6 +867,21 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CompanyDto'
+  /company/top:
+    get:
+      tags:
+        - company
+      summary: company
+      operationId: getTopCompanies
+      responses:
+        200:
+          description: CompanyResponse
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CompanyDto'
 
   /unitmeasure:
     get:
@@ -759,13 +922,12 @@ paths:
       operationId: getFavorite
       responses:
         200:
-          description: favorite response array
+          description: Combined response with three arrays
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FavoriteResponse'
+                $ref: '#/components/schemas/FavoriteResponse'
+
     post:
       tags:
         - favorite
@@ -780,41 +942,9 @@ paths:
       responses:
         200:
           description: Favorite created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FavoriteResponse'
-    put:
-      tags:
-        - favorite
-      summary: Update a Favorite
-      operationId: updateFavorite
-      parameters:
-        - name: id
-          in: query
-          required: true
-          description: ID of the favorite to update
-          schema:
-            type: string
-        - name: type
-          in: query
-          required: true
-          description: type of the favorite to update
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FavoriteRequest'
-      responses:
-        200:
-          description: Favorite updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FavoriteResponse'
+
+
+  /favorite/{id}:
     delete:
       tags:
         - favorite
@@ -822,7 +952,7 @@ paths:
       operationId: deleteFavoriteById
       parameters:
         - name: id
-          in: query
+          in: path
           required: true
           description: ID of the favorite to delete
           schema:
@@ -832,7 +962,6 @@ paths:
           description: Favorite deleted successfully
         404:
           description: Favorite not found
-
 
   /favorite/{type}:
     get:
@@ -849,18 +978,52 @@ paths:
             type: string
       responses:
         200:
-          description: Favorite found
+          description: Combined response with three arrays
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FavoriteResponse'
+                $ref: '#/components/schemas/FavoriteResponse'
         404:
           description: Favorite not found
 
 components:
   schemas:
+    UserRequest:
+      type: object
+      properties:
+        userID:
+          type: string
+        name:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        companyID:
+          type: string
+        role:
+          $ref: '#/components/schemas/Role'
+
+    UserResponse:
+      type: object
+      properties:
+        userID:
+          type: string
+        name:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        username:
+          type: string
+        companyID:
+          type: string
+        role:
+          $ref: '#/components/schemas/Role'
+
     User:
       type: object
       properties:
@@ -874,13 +1037,22 @@ components:
           type: string
         username:
           type: string
+        companyID:
+          type: string
         role:
           $ref: '#/components/schemas/Role'
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expiresIn:
+          type: integer
     Role:
       type: string
       enum:
         - CUSTOMER
         - SUPPLIER
+        - ADMIN
     TokenResponse:
       type: object
       properties:
@@ -897,52 +1069,28 @@ components:
       properties:
         active:
           type: boolean
-
     StatusesResponse:
       type: object
       properties:
         general:
-          $ref: '#/components/schemas/StatusDto'
+          type: integer
         todos:
-          $ref: '#/components/schemas/StatusDto'
+          type: integer
         statusImprovement:
-          $ref: '#/components/schemas/StatusDto'
+          type: integer
         statusDegredation:
-          $ref: '#/components/schemas/StatusDto'
-        overall_general:
-          $ref: '#/components/schemas/StatusDto'
-        overall_todos:
-          $ref: '#/components/schemas/StatusDto'
-        overall_statusImprovement:
-          $ref: '#/components/schemas/StatusDto'
-        overall_statusDegredation:
-          $ref: '#/components/schemas/StatusDto'
-
+          type: integer
 
     StatusRequest:
       type: object
       properties:
         general:
-          $ref: '#/components/schemas/StatusDto'
+          type: integer
         todos:
-          $ref: '#/components/schemas/StatusDto'
+          type: integer
         statusImprovement:
-          $ref: '#/components/schemas/StatusDto'
-        statusDegredation:
-          $ref: '#/components/schemas/StatusDto'
-        overall_general:
-          $ref: '#/components/schemas/StatusDto'
-        overall_todos:
-          $ref: '#/components/schemas/StatusDto'
-        overall_statusImprovement:
-          $ref: '#/components/schemas/StatusDto'
-        overall_statusDegredation:
-          $ref: '#/components/schemas/StatusDto'
-
-    StatusDto:
-      type: object
-      properties:
-        count:
+          type: integer
+        statusDegradation:
           type: integer
 
     DemandRequestDto:
@@ -997,7 +1145,6 @@ components:
             format: uuid
           description: 'Array of UUIDs representing linked material demand IDs.'
 
-
     DemandResponseDto:
       type: object
       properties:
@@ -1033,6 +1180,8 @@ components:
       type: object
       properties:
         id:
+          type: integer
+        logID:
           type: string
         userAccount:
           type: string
@@ -1056,6 +1205,8 @@ components:
       type: object
       properties:
         id:
+          type: integer
+        logID:
           type: string
         userAccount:
           type: string
@@ -1078,6 +1229,8 @@ components:
       type: object
       properties:
         id:
+          type: integer
+        logID:
           type: string
         userAccount:
           type: string
@@ -1100,6 +1253,8 @@ components:
       type: object
       properties:
         id:
+          type: integer
+        logID:
           type: string
         userAccount:
           type: string
@@ -1310,6 +1465,8 @@ components:
     MaterialDemandRequest:
       type: object
       properties:
+        id:
+          type: string
         materialDescriptionCustomer:
           type: string
         materialNumberCustomer:
@@ -1330,6 +1487,8 @@ components:
     MaterialDemandSeries:
       type: object
       properties:
+        id:
+          type: string
         customerLocationId:
           type: string
         expectedSupplierLocationId:
@@ -1342,6 +1501,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MaterialDemandSeriesValue'
+        capacityGroupId:
+          type: string
+        materialDemand:
+          type: string
+
+
 
     MaterialDemandSeriesValue:
       type: object
@@ -1374,6 +1539,9 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MaterialDemandSeriesResponse'
+        linkStatus:
+          type: string
+
 
     CompanyDto:
       type: object
@@ -1393,6 +1561,127 @@ components:
         country:
           type: string
         myCompany:
+          type: string
+
+    CompanyDtoFavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        bpn:
+          type: string
+        companyName:
+          type: string
+        zipCode:
+          type: string
+        country:
+          type: string
+        myCompany:
+          type: string
+        favorited_at:
+          type: string
+
+    EventFavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        logID:
+          type: string
+        eventType:
+          type: string
+        timeCreated:
+          type: string
+        userAccount:
+          type: string
+        description:
+          type: string
+        favorited_at:
+          type: string
+
+    AddressBookRequest:
+      type: object
+      properties:
+        query:
+          type: string
+        directQuery:
+          type: boolean
+
+    AddressBookResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        companyId:
+          type: string
+        name:
+          type: string
+        contact:
+          type: string
+        email:
+          type: string
+        function:
+          type: string
+        picture:
+          type: string
+          format: byte
+
+    MaterialDemandFavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        materialDescriptionCustomer:
+          type: string
+        materialNumberCustomer:
+          type: string
+        materialNumberSupplier:
+          type: string
+        customer:
+          $ref: '#/components/schemas/CompanyDto'
+        supplier:
+          $ref: '#/components/schemas/CompanyDto'
+        status:
+          type: string
+        unitOfMeasure:
+          type: string
+        changedAt:
+          type: string
+        favorited_at:
+          type: string
+
+    SingleCapacityGroupFavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        customer:
+          $ref: '#/components/schemas/CompanyDto'
+        supplier:
+          $ref: '#/components/schemas/CompanyDto'
+        capacityGroupId:
+          type: string
+        status:
+          type: string
+        capacityGroupName:
+          type: string
+        favorited_at:
+          type: string
+
+    AddressBookFavoriteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        companyId:
+          type: string
+        name:
+          type: string
+        contact:
+          type: string
+        email:
+          type: string
+        function:
           type: string
 
     UnitMeasure:
@@ -1416,6 +1705,8 @@ components:
     MaterialDemandSeriesResponse:
       type: object
       properties:
+        id:
+          type: string
         customerLocation:
           $ref: '#/components/schemas/CompanyDto'
         expectedSupplierLocation:
@@ -1428,6 +1719,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MaterialDemandSeriesValue'
+        materialDemandId:
+          type: string
 
     DemandSeriesCompositeResponse:
       type: object
@@ -1568,13 +1861,15 @@ components:
           type: string
         status:
           type: string
+        linkStatus:
+          type: string
 
     LinkCGDSRequest:
       type: object
       properties:
         capacityGroupID:
           type: string
-        linkedMaterialDemandID:
+        linkMaterialDemandIds:
           type: array
           items:
             type: string
@@ -1599,11 +1894,49 @@ components:
           type: string
         supplier:
           type: string
-        linkDemandSeriesID:
+        linkMaterialDemandIds:
           type: array
           items:
             type: string
             format: uuid
+
+    SingleCapacityGroup:
+      type: object
+      properties:
+        customer:
+          $ref: '#/components/schemas/CompanyDto'
+        supplier:
+          $ref: '#/components/schemas/CompanyDto'
+        capacities:
+          type: array
+          items:
+            $ref: '#/components/schemas/CapacityBody'
+        linkMaterialDemandIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+        capacityGroupId:
+          type: string
+        capacityGroupName:
+          type: string
+
+    CapacityBody:
+      type: object
+      properties:
+        capacityId:
+          type: string
+        actualCapacity:
+          type: number
+        maximumCapacity:
+          type: number
+        calendarWeek:
+          type: string
+        ruled:
+          type: boolean
+        weekColor:
+          type: string
+
 
     FavoriteRequest:
       type: object
@@ -1612,15 +1945,27 @@ components:
           type: string
         fType:
           type: string
-        fTypeId:
-          type: string
 
     FavoriteResponse:
       type: object
       properties:
-        favoriteId:
-          type: string
-        fType:
-          type: string
-        fTypeId:
-          type: string
+        capacityGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/SingleCapacityGroupFavoriteResponse'
+        materialDemands:
+          type: array
+          items:
+            $ref: '#/components/schemas/MaterialDemandFavoriteResponse'
+        companies:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyDtoFavoriteResponse'
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventFavoriteResponse'
+        addressBooks:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressBookFavoriteResponse'

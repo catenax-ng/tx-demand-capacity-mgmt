@@ -68,6 +68,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-transform-flow-strip-types": "^7.22.5",
     "@babel/template": "^7.22.5",
     "@types/keycloak-js": "^3.4.1",
     "@types/react-datepicker": "^4.11.2",
