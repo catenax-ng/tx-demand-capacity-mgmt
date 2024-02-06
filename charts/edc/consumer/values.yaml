@@ -134,14 +134,14 @@ tractusx-connector:
     ssi:
       miw:
         url: "https://managed-identity-wallets-new.int.demo.catena-x.net"
-        authorityId: "BPNL00DEMAND0001"
+        authorityId: "BPNL00000003BAJ2"
       oauth:
-        tokenurl: "https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
+        tokenurl: "https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
         client:
-          id: "sa631"
+          id: "sa209"
           secretAlias: "miw-oem-secret"
       endpoint:
-        audience: https://dcm.dev.demo.catena-x.net/consumer
+        audience: https://dcm.int.demo.catena-x.net/consumer
 
     service:
       # -- [Service type](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types) to expose the running application on a set of Pods as a network service.
@@ -208,7 +208,7 @@ tractusx-connector:
       ## Public / Internet facing Ingress
       - enabled: true
         # -- The hostname to be used to precisely map incoming traffic onto the underlying network service
-        hostname: "dcm.dev.demo.catena-x.net"
+        hostname: "dcm.int.demo.catena-x.net"
         # -- Additional ingress annotations to add
         annotations: {}
         # -- EDC endpoints exposed by this ingress resource
@@ -438,7 +438,7 @@ tractusx-connector:
       ## Public / Internet facing Ingress
       - enabled: true
         # -- The hostname to be used to precisely map incoming traffic onto the underlying network service
-        hostname: "dcm.dev.demo.catena-x.net"
+        hostname: "dcm.int.demo.catena-x.net"
         # -- Additional ingress annotations to add
         annotations: {}
         # -- EDC endpoints exposed by this ingress resource
@@ -543,7 +543,7 @@ tractusx-connector:
       transferProxyTokenEncryptionAesKey: DATA_ENCRYPTION_KEYS_ALIAS
 
   backendService:
-    httpProxyTokenReceiverUrl: "https://dcm.dev.demo.catena-x.net/endpoint"
+    httpProxyTokenReceiverUrl: "https://dcm.int.demo.catena-x.net/endpoint"
 
   networkPolicy:
     # -- If `true` network policy will be created to restrict access to control- and dataplane

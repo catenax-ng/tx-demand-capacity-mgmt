@@ -21,7 +21,7 @@
 
 provider-dtr:
   registry:
-    host: dcm.dev.demo.catena-x.net
+    host: dcm.int.demo.catena-x.net
     ## If 'authentication' is set to false, no OAuth authentication is enforced
     authentication: false
     # Issuer url for the dtr (resource server),
