@@ -139,7 +139,7 @@ tractusx-connector:
         tokenurl: "https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
         client:
           id: "sa209"
-          secretAlias: "miw-oem-secret"
+          secretAlias: miw-oem-secret
       endpoint:
         audience: https://dcm.int.demo.catena-x.net/consumer
 
