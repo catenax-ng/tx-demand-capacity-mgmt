@@ -535,6 +535,8 @@ tractusx-connector:
         standbyOk: true
       paths:
         secret: /v1/cgi-dcm-foss
+      secretNames:
+        transferProxyTokenEncryptionAesKey: "DATA_ENCRYPTION_KEYS_ALIAS"
 
 
   backendService:
