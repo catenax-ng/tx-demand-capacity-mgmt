@@ -78,9 +78,9 @@ txdc:
         url: "https://managed-identity-wallets-new.int.demo.catena-x.net"
         authorityId: "BPNL00000003CRHK"
       oauth:
-        tokenurl: "https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
+        tokenurl: "TOKEN_URL"
         client:
-          id: "sa209"
+          id: "CLIENT_ID"
           secretAlias: "CLIENT_SECRET"
 
   dataplane:
