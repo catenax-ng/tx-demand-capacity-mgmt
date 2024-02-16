@@ -56,7 +56,7 @@ txdc:
       ## Public / Internet facing Ingress
       - enabled: true
         # -- The hostname to be used to precisely map incoming traffic onto the underlying network service
-        hostname: "country-risk-consumer-member-edc.int.demo.catena-x.net"
+        hostname: "dcm-consumer-member-edc.int.demo.catena-x.net"
         className: "nginx"
         # -- EDC endpoints exposed by this ingress resource
         endpoints:
