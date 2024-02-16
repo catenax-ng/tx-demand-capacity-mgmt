@@ -134,14 +134,11 @@ tractusx-connector:
     ssi:
       miw:
         url: "https://managed-identity-wallets-new.int.demo.catena-x.net"
-        authorityId: "BPNL00DEMAND0001"
       oauth:
         tokenurl: "https://centralidp.int.demo.catena-x.net/auth/realms/CX-Central/protocol/openid-connect/token"
         client:
           id: "sa209"
           secretAlias: "CLIENT_SECRET"
-      endpoint:
-        audience: https://dcm.int.demo.catena-x.net/consumer
 
     service:
       # -- [Service type](https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types) to expose the running application on a set of Pods as a network service.
