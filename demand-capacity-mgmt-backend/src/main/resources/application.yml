@@ -43,10 +43,10 @@ spring:
     locations: classpath:db/migration/postgresql
     
 keycloak:
-  baseUrl: http://localhost:8888
-  realm: dcm
-  clientId: dcmauth
-  clientSecret: ${DCMSECR}
+  baseUrl: https://centralidp.int.demo.catena-x.net/auth
+  realm: CX-Central
+  clientId: sa209
+  clientSecret: VnH2ieRJAIurm4qFvUjQOOjbHSCdmojs
   grant_type_token: password
   grant_type_refresh_token : refresh_token
 
